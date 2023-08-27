@@ -6,17 +6,68 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/text_home"
+    <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/wk1"
+        android:background="@drawable/white_button"
+        android:text="@string/morning_workout"
+        android:layout_marginTop="150sp"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/wk1"
+        android:id="@+id/wk2"
+        android:background="@drawable/white_button"
+        android:text="@string/second_workout"
+        android:layout_marginTop="15sp"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/wk2"
+        android:id="@+id/junk"
+
+        android:background="@drawable/white_button"
+        android:text="@string/did_not_consume_junk_food"
+        android:layout_marginTop="15sp"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/junk"
+        android:id="@+id/water"
+
+        android:background="@drawable/white_button"
+        android:text="@string/consumed_a_gallon_4_liter_of_water"
+        android:layout_marginTop="15sp"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/water"
+        android:id="@+id/pic"
+
+        android:background="@drawable/white_button"
+        android:text="@string/take_a_progress_picture"
+        android:layout_marginTop="15sp"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/pic"
+        android:id="@+id/book"
+        android:background="@drawable/white_button"
+        android:text="Read 10 pages of a book"
+        android:layout_marginTop="15sp"
+        />
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
