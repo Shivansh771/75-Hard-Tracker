@@ -63,7 +63,18 @@
         app:layout_constraintTop_toBottomOf="@id/pic"
         android:id="@+id/book"
         android:background="@drawable/white_button"
-        android:text="Read 10 pages of a book"
+        android:text="@string/read_10_pages_of_a_book"
+        android:layout_marginTop="15sp"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/book"
+        android:id="@+id/confirm_button"
+        android:background="@drawable/white_button"
+        android:text="@string/confirm"
+        android:visibility="gone"
         android:layout_marginTop="15sp"
         />
 
