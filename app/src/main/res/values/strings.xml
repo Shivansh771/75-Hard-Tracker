@@ -4,8 +4,10 @@
     <string name="title_streak">Streak</string>
     <string name="title_progress">Progress</string>
     <string name="morning_workout">Morning workout</string>
-    <string name="second_workout">Second Workout</string>
+    <string name="second_workout">Evening Workout</string>
     <string name="did_not_consume_junk_food">Did not consume junk food</string>
     <string name="consumed_a_gallon_4_liter_of_water">Consumed a gallon/4 liter of water</string>
     <string name="take_a_progress_picture">Take a progress picture</string>
+    <string name="read_10_pages_of_a_book">Read 10 pages of a book</string>
+    <string name="confirm">Confirm!</string>
 </resources>
