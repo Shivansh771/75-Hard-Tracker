@@ -1,8 +1,10 @@
 package com.example.hard75tracker.ui.home
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +21,7 @@ import com.example.hard75tracker.databinding.FragmentHomeBinding
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     var btncount=0
+    private val buttonStates=BooleanArray(6)
 
 
     private val binding get() = _binding!!
@@ -35,6 +38,12 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
 
+        if(buttonStates[0]){
+            binding.wk1.setBackgroundResource(R.drawable.shape_button_rounded)
+        }
+
+
+
         return root
     }
 
@@ -48,6 +57,7 @@ class HomeFragment : Fragment() {
             anim(mw,mwc)
                 mwc=true
                 btncount++
+                buttonStates[0]=!buttonStates[0]
                 if(btncount==6){
                     val handler=Handler(Looper.getMainLooper())
                     handler.postDelayed({
@@ -61,8 +71,10 @@ class HomeFragment : Fragment() {
         else{
             anim(mw,mwc)
             btncount--
+            buttonStates[0]=!buttonStates[0]
             mwc=false
-                btnunvis()
+            btnunvis()
+
 
             }}
         var wk2=binding.wk2

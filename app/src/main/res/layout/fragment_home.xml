@@ -13,7 +13,7 @@
         android:id="@+id/wk1"
         android:background="@drawable/white_button"
         android:text="@string/morning_workout"
-        android:layout_marginTop="150sp"
+        android:layout_marginTop="100dp"
         />
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
@@ -75,7 +75,7 @@
         android:background="@drawable/white_button"
         android:text="@string/confirm"
         android:visibility="gone"
-        android:layout_marginTop="15sp"
+        android:layout_marginTop="45sp"
         />
 
 
