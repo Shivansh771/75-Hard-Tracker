@@ -14,9 +14,13 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.hard75tracker.R
+import com.example.hard75tracker.application.buttonStateApplication
+import com.example.hard75tracker.database.buttonStateRepository
 import com.example.hard75tracker.databinding.FragmentHomeBinding
+import com.example.hard75tracker.entities.buttonState
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -32,12 +36,23 @@ class HomeFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View {
         val homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
+            ViewModelProvider(this)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
 
+        homeViewModel.buttonStateList.observe(viewLifecycleOwner){
+            state->
+            state.let{
+                if(it.isNotEmpty()){
+                    Toast.makeText(requireActivity(),"${homeViewModel.buttonStateList}",Toast.LENGTH_SHORT).show()
+                }else{
+
+                }
+            }
+
+        }
         if(buttonStates[0]){
             binding.wk1.setBackgroundResource(R.drawable.shape_button_rounded)
         }
@@ -58,6 +73,15 @@ class HomeFragment : Fragment() {
                 mwc=true
                 btncount++
                 buttonStates[0]=!buttonStates[0]
+                val btnState=buttonState(
+                    buttonStates,
+                    btncount
+                )
+                val homeViewModel:HomeViewModel by viewModels {
+                    buttonStateViewModelFactory((requireActivity().application as buttonStateApplication).repository)
+                }
+                homeViewModel.insert(btnState)
+
                 if(btncount==6){
                     val handler=Handler(Looper.getMainLooper())
                     handler.postDelayed({
