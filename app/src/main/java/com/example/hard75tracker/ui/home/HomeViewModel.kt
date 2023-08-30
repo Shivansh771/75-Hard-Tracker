@@ -1,39 +1,13 @@
 package com.example.hard75tracker.ui.home
 
-import androidx.lifecycle.*
-import com.example.hard75tracker.database.buttonStateRepository
-import com.example.hard75tracker.entities.buttonState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
-class HomeViewModel(private val repository: buttonStateRepository) : ViewModel() {
-    fun insert(buttonState: buttonState)=viewModelScope.launch{
-        withContext(Dispatchers.IO) {
-            repository.insertButtonState(buttonState)
-        }
-    }
-    val buttonStateList:LiveData<List<buttonState>> = repository.buttonStateList.asLiveData()
+class HomeViewModel : ViewModel() {
 
-    fun update(buttonState: buttonState)=viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            repository.updateButtonState(buttonState)
-        }
+    private val _text = MutableLiveData<String>().apply {
+        value = "This is home Fragment"
     }
-    fun delete(buttonState: buttonState)=viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            repository.delete(buttonState)
-        }
-    }
-
-}
-class buttonStateViewModelFactory(private val repository: buttonStateRepository):ViewModelProvider.Factory{
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(HomeViewModel::class.java)){
-            @Suppress("UNCHECKED_CAST")
-            return HomeViewModel(repository) as T
-        }
-        throw java.lang.IllegalArgumentException("Unknown ViewModel Class")
-
-    }
+    val text: LiveData<String> = _text
 }
