@@ -20,17 +20,39 @@ import com.example.hard75tracker.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
+    private lateinit var sharedPref:SharedPreferences
     var btncount=0
-    private val buttonStates=BooleanArray(6)
+
 
 
     private val binding get() = _binding!!
+    private val buttonStates=BooleanArray(6)
 
+
+    override fun onPause() {
+        super.onPause()
+
+        super.onPause()
+        val editor=sharedPref.edit()
+        editor.putInt("btncount",buttonStates.count{it})
+        for(i in buttonStates.indices){
+            editor.putBoolean("buttonStates$i",buttonStates[i])
+        }
+        editor.apply()
+    }
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+        btncount=sharedPref.getInt("btncount",0)
+        for(i in buttonStates.indices){
+            buttonStates[i]=sharedPref.getBoolean("buttonStates$i",false)
+
+        }
+
         val homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
 
@@ -41,6 +63,29 @@ class HomeFragment : Fragment() {
         if(buttonStates[0]){
             binding.wk1.setBackgroundResource(R.drawable.shape_button_rounded)
         }
+        if(buttonStates[1]){
+            binding.wk2.setBackgroundResource(R.drawable.shape_button_rounded)
+
+        }
+        if(buttonStates[2]){
+            binding.junk.setBackgroundResource(R.drawable.shape_button_rounded)
+        }
+        if(buttonStates[3]){
+            binding.water.setBackgroundResource(R.drawable.shape_button_rounded)
+
+        }
+        if(buttonStates[4]){
+            binding.pic.setBackgroundResource(R.drawable.shape_button_rounded)
+
+        }
+        if(buttonStates[5]){
+            binding.book.setBackgroundResource(R.drawable.shape_button_rounded)
+        }
+        if(btncount>6){
+            binding.confirmButton.visibility=View.VISIBLE
+        }
+
+
 
 
 
@@ -50,14 +95,17 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var mw=binding.wk1
-        var mwc=false
+        var mwc=buttonStates[0]
+
         mw.setOnClickListener{
             if(!mwc){
 
             anim(mw,mwc)
                 mwc=true
                 btncount++
+                Toast.makeText(requireContext(),"$btncount",Toast.LENGTH_SHORT).show()
                 buttonStates[0]=!buttonStates[0]
+
                 if(btncount==6){
                     val handler=Handler(Looper.getMainLooper())
                     handler.postDelayed({
@@ -67,6 +115,7 @@ class HomeFragment : Fragment() {
                 }else{
                     btnunvis()
                 }
+
         }
         else{
             anim(mw,mwc)
@@ -76,14 +125,21 @@ class HomeFragment : Fragment() {
             btnunvis()
 
 
-            }}
+            }
+        mwc=buttonStates[0]
+        update()
+
+        }
         var wk2=binding.wk2
-        var wk2c=false
+        var wk2c=buttonStates[1]
+
         wk2.setOnClickListener{
             if(!wk2c){
                 anim(wk2,wk2c)
                 wk2c=true
                 btncount++
+                buttonStates[1]=!buttonStates[1]
+
                 if(btncount==6){
                     val handler=Handler(Looper.getMainLooper())
                     handler.postDelayed({
@@ -99,15 +155,23 @@ class HomeFragment : Fragment() {
                 btncount--
                 wk2c=false
                 btnunvis()
+                buttonStates[1]=!buttonStates[1]
 
-            }}
+
+            }
+            wk2c=buttonStates[1]
+
+            update()}
         var jk=binding.junk
-        var jkc=false
+        var jkc=buttonStates[2]
+
         jk.setOnClickListener{
             if(!jkc){
                 anim(jk,jkc)
                 jkc=true
                 btncount++
+                buttonStates[2]=!buttonStates[2]
+
                 if(btncount==6){
                     val handler=Handler(Looper.getMainLooper())
                     handler.postDelayed({
@@ -122,16 +186,24 @@ class HomeFragment : Fragment() {
                 anim(jk,jkc)
                 jkc=false
                 btncount--
+                buttonStates[2]=!buttonStates[2]
+
                 btnunvis()
 
-            }}
+            }
+            jkc=buttonStates[2]
+
+            update()}
         var water=binding.water
-        var wtrc=false
+        var wtrc=buttonStates[3]
+
         water.setOnClickListener{
             if(wtrc==false){
                 anim(water,wtrc)
                 btncount++
                 wtrc=true
+                buttonStates[3]=!buttonStates[3]
+
                 if(btncount==6){
                     val handler=Handler(Looper.getMainLooper())
                     handler.postDelayed({
@@ -147,16 +219,24 @@ class HomeFragment : Fragment() {
                 wtrc=false
 
                 btncount--
+                buttonStates[3]=!buttonStates[3]
+
                 btnunvis()
 
-            }}
+            }
+            wtrc=buttonStates[3]
+
+            update()}
         var progress=binding.pic
-        var picc=false
+        var picc=buttonStates[4]
+
         progress.setOnClickListener{
             if(picc==false){
                 anim(progress,picc)
                 btncount++
                 picc=true
+                buttonStates[4]=!buttonStates[4]
+
                 if(btncount==6){
                     val handler=Handler(Looper.getMainLooper())
                     handler.postDelayed({
@@ -171,15 +251,23 @@ class HomeFragment : Fragment() {
                 anim(progress,picc)
                 btncount--
                 picc=false
+                buttonStates[4]=!buttonStates[4]
+
                 btnunvis()
 
-            }}
+            }
+            picc=buttonStates[4]
+
+            update()}
         var book=binding.book
-        var bookc=false
+        var bookc=buttonStates[5]
+
         book.setOnClickListener{
             if(bookc==false){
                 anim(book,bookc)
                 btncount++
+                buttonStates[5]=!buttonStates[5]
+
                 bookc=true
                 if(btncount==6){
                     val handler=Handler(Looper.getMainLooper())
@@ -195,8 +283,12 @@ class HomeFragment : Fragment() {
                 book.setBackgroundResource(R.drawable.white_button)
                 btncount--
                 bookc=false
+                buttonStates[5]=!buttonStates[5]
+
                 btnunvis()
-            }}
+            }
+            bookc=buttonStates[5]
+        update()}
 
 
 
@@ -234,5 +326,13 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+    fun update(){
+        val editor=sharedPref.edit()
+        editor.putInt("btncount",buttonStates.count{it})
+        for(i in buttonStates.indices){
+            editor.putBoolean("buttonStates$i",buttonStates[i])
+        }
+        editor.apply()
     }
 }
