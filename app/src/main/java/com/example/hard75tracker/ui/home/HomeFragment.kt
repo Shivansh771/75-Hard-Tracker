@@ -1,6 +1,7 @@
 package com.example.hard75tracker.ui.home
 
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,18 +12,18 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.hard75tracker.R
 import com.example.hard75tracker.databinding.FragmentHomeBinding
+import java.time.LocalDate
+import java.util.*
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private lateinit var sharedPref:SharedPreferences
     var btncount=0
-
 
 
     private val binding get() = _binding!!
@@ -40,6 +41,7 @@ class HomeFragment : Fragment() {
         }
         editor.apply()
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -47,17 +49,40 @@ class HomeFragment : Fragment() {
     ): View {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
-        btncount=sharedPref.getInt("btncount",0)
-        for(i in buttonStates.indices){
-            buttonStates[i]=sharedPref.getBoolean("buttonStates$i",false)
+        val currentDate = LocalDate.now().toString()
+        val storedDate = sharedPref.getString("date", "")
+        if(currentDate!=storedDate){
+            for(i in buttonStates.indices){
+                buttonStates[i]=false
+            }
+            btncount=0
+        }else{
 
-        }
+
+
+
+        for(i in buttonStates.indices){
+                    buttonStates[i]=sharedPref.getBoolean("buttonStates$i",false)
+
+                }
+                btncount=sharedPref.getInt("btncount",0)
+
+
+                }
 
         val homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        if(btncount==6){
+            binding.confirmButton.visibility=View.VISIBLE
+
+        }
+        else{
+            binding.confirmButton.visibility=View.GONE
+        }
+
 
 
         if(buttonStates[0]){
@@ -92,6 +117,7 @@ class HomeFragment : Fragment() {
         return root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var mw=binding.wk1
@@ -103,8 +129,9 @@ class HomeFragment : Fragment() {
             anim(mw,mwc)
                 mwc=true
                 btncount++
-                Toast.makeText(requireContext(),"$btncount",Toast.LENGTH_SHORT).show()
                 buttonStates[0]=!buttonStates[0]
+
+
 
                 if(btncount==6){
                     val handler=Handler(Looper.getMainLooper())
@@ -327,12 +354,18 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     fun update(){
         val editor=sharedPref.edit()
+        val currentDate = LocalDate.now().toString()
+
         editor.putInt("btncount",buttonStates.count{it})
         for(i in buttonStates.indices){
             editor.putBoolean("buttonStates$i",buttonStates[i])
         }
+        editor.putString("date", currentDate)
+
+
         editor.apply()
     }
 }
