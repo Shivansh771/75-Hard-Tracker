@@ -1,22 +1,40 @@
 package com.example.hard75tracker.ui.home
 
+import android.Manifest
+import android.app.Dialog
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.preference.PreferenceManager
+import android.provider.MediaStore
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.hard75tracker.R
+import com.example.hard75tracker.databinding.DialogCustomImageSelectionBinding
 import com.example.hard75tracker.databinding.FragmentHomeBinding
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.karumi.dexter.listener.single.PermissionListener
 import java.time.LocalDate
 import java.util.*
 
@@ -257,7 +275,9 @@ class HomeFragment : Fragment() {
         var progress=binding.pic
         var picc=buttonStates[4]
 
+
         progress.setOnClickListener{
+            customImageSelectionDialog()
             if(picc==false){
                 anim(progress,picc)
                 btncount++
@@ -367,5 +387,171 @@ class HomeFragment : Fragment() {
 
 
         editor.apply()
+    }
+    private fun customImageSelectionDialog() {
+        val dialog= Dialog(requireContext())
+
+        val binding: DialogCustomImageSelectionBinding =
+            DialogCustomImageSelectionBinding.inflate(layoutInflater)
+
+        /*Set the screen content from a layout resource.
+        The resource will be inflated, adding all top-level views to the screen.*/
+        dialog.setContentView(binding.root)
+
+        binding.tvCamera.setOnClickListener {
+            if(Build.VERSION.SDK_INT<Build.VERSION_CODES.TIRAMISU) {
+                Dexter.withContext(requireContext())
+                    .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA,
+
+                        )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+
+                            report?.let {
+                                // Here after all the permission are granted launch the CAMERA to capture an image.
+                                if (report.areAllPermissionsGranted()) {
+
+                                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                                    startActivityForResult(intent, CAMERA)
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            showRationalDialogForPermissions()
+                        }
+                    }).onSameThread()
+                    .check()
+            }else{
+                Dexter.withContext(requireContext())
+                    .withPermissions(
+                        Manifest.permission.READ_MEDIA_IMAGES,
+                        Manifest.permission.CAMERA,
+
+                        )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+
+                            report?.let {
+                                // Here after all the permission are granted launch the CAMERA to capture an image.
+                                if (report.areAllPermissionsGranted()) {
+
+                                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                                    startActivityForResult(intent, CAMERA)
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            showRationalDialogForPermissions()
+                        }
+                    }).onSameThread()
+                    .check()
+            }
+            dialog.dismiss()
+        }
+
+        binding.tvGallery.setOnClickListener {
+            if(Build.VERSION.SDK_INT<Build.VERSION_CODES.TIRAMISU) {
+                Dexter.withContext(requireContext())
+                    .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    .withListener(object : PermissionListener {
+                        override fun onPermissionGranted(response: PermissionGrantedResponse) {
+                            val galleryIntent = Intent(
+                                Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                            )
+
+                            startActivityForResult(galleryIntent, GALLERY)
+                        }
+
+                        override fun onPermissionDenied(response: PermissionDeniedResponse) {
+                            Toast.makeText(
+                                requireContext(),
+                                "You have denied the storage permission to select image.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permission: PermissionRequest,
+                            token: PermissionToken
+                        ) {
+                            showRationalDialogForPermissions()
+                        }
+                    })
+                    .onSameThread()
+                    .check()
+            }else{
+                Dexter.withContext(requireContext())
+                    .withPermission(Manifest.permission.READ_MEDIA_IMAGES)
+                    .withListener(object : PermissionListener {
+                        override fun onPermissionGranted(response: PermissionGrantedResponse) {
+                            val galleryIntent = Intent(
+                                Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                            )
+
+                            startActivityForResult(galleryIntent, GALLERY)
+                        }
+
+                        override fun onPermissionDenied(response: PermissionDeniedResponse) {
+                            Toast.makeText(
+                                requireContext(),
+                                "You have denied the storage permission to select image.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permission: PermissionRequest,
+                            token: PermissionToken
+                        ) {
+                            showRationalDialogForPermissions()
+                        }
+                    })
+                    .onSameThread()
+                    .check()
+
+            }
+            dialog.dismiss()
+        }
+
+        //Start the dialog and display it on screen.
+        dialog.show()
+    }
+    companion object {
+        private const val CAMERA = 1
+
+        private const val GALLERY = 2
+        private const val IMAGE_DIRECTORY="RecipeAppImages"
+
+    }
+    private fun showRationalDialogForPermissions() {
+        AlertDialog.Builder(requireContext())
+            .setMessage("It Looks like you have turned off permissions required for this feature. It can be enabled under Application Settings")
+            .setPositiveButton(
+                "GO TO SETTINGS"
+            ) { _, _ ->
+                try {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", null,null)
+                    intent.data = uri
+                    startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    e.printStackTrace()
+                }
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }.show()
     }
 }
