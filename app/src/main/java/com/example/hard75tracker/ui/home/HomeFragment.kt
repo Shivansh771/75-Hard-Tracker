@@ -42,6 +42,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private lateinit var sharedPref:SharedPreferences
     var btncount=0
+    private lateinit var datelist:MutableSet<String>
 
 
     private val binding get() = _binding!!
@@ -84,6 +85,7 @@ class HomeFragment : Fragment() {
 
                 }
                 btncount=sharedPref.getInt("btncount",0)
+                datelist= sharedPref.getStringSet("datelist", mutableSetOf("")) as MutableSet<String>
 
 
                 }
@@ -336,9 +338,29 @@ class HomeFragment : Fragment() {
             }
             bookc=buttonStates[5]
         update()}
+        binding.confirmButton.setOnClickListener{
+            val editor=sharedPref.edit()
+            val current=LocalDate.now().toString()
+
+            editor.putStringSet("datelist", mutableSetOf())
+        }
 
 
 
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun update(){
+        val editor=sharedPref.edit()
+        val currentDate = LocalDate.now().toString()
+
+        editor.putInt("btncount",buttonStates.count{it})
+        for(i in buttonStates.indices){
+            editor.putBoolean("buttonStates$i",buttonStates[i])
+        }
+        editor.putString("date", currentDate)
+
+
+        editor.apply()
     }
     fun anim(btn:Button,bl:Boolean){
         val animn=AnimationUtils.loadAnimation(context,R.anim.fade)
@@ -374,20 +396,7 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun update(){
-        val editor=sharedPref.edit()
-        val currentDate = LocalDate.now().toString()
 
-        editor.putInt("btncount",buttonStates.count{it})
-        for(i in buttonStates.indices){
-            editor.putBoolean("buttonStates$i",buttonStates[i])
-        }
-        editor.putString("date", currentDate)
-
-
-        editor.apply()
-    }
     private fun customImageSelectionDialog() {
         val dialog= Dialog(requireContext())
 
