@@ -1,10 +1,13 @@
 package com.example.hard75tracker.ui.home
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +15,7 @@ import android.os.Handler
 import android.os.Looper
 import android.preference.PreferenceManager
 import android.provider.MediaStore
+import android.provider.MediaStore.Images.Media.getBitmap
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +26,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.hard75tracker.R
@@ -35,15 +40,19 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 import java.time.LocalDate
 import java.util.*
+import kotlin.properties.Delegates
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private lateinit var sharedPref:SharedPreferences
     var btncount=0
     private lateinit var datelist:MutableSet<String>
-
 
     private val binding get() = _binding!!
     private val buttonStates=BooleanArray(6)
@@ -338,12 +347,7 @@ class HomeFragment : Fragment() {
             }
             bookc=buttonStates[5]
         update()}
-        binding.confirmButton.setOnClickListener{
-            val editor=sharedPref.edit()
-            val current=LocalDate.now().toString()
-
-            editor.putStringSet("datelist", mutableSetOf())
-        }
+        var confirm=binding.confirmButton
 
 
 
@@ -537,13 +541,6 @@ class HomeFragment : Fragment() {
         //Start the dialog and display it on screen.
         dialog.show()
     }
-    companion object {
-        private const val CAMERA = 1
-
-        private const val GALLERY = 2
-        private const val IMAGE_DIRECTORY="RecipeAppImages"
-
-    }
     private fun showRationalDialogForPermissions() {
         AlertDialog.Builder(requireContext())
             .setMessage("It Looks like you have turned off permissions required for this feature. It can be enabled under Application Settings")
@@ -563,4 +560,47 @@ class HomeFragment : Fragment() {
                 dialog.dismiss()
             }.show()
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if ((requestCode == GALLERY && resultCode == RESULT_OK)) {
+            val imageUri = data?.data
+            val bitmap = getBitmap(activity!!.contentResolver, imageUri)
+            saveImageToInternalStorage(bitmap)
+        }
+        else if(requestCode== CAMERA && resultCode== RESULT_OK){
+            val imageBitmap=data?.extras?.get("data") as Bitmap
+            saveImageToInternalStorage(imageBitmap)
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun saveImageToInternalStorage(bitmap: Bitmap) {
+        val folder = File(activity!!.getExternalFilesDir(null), IMAGE_DIRECTORY)
+        if (!folder.exists()) {
+            folder.mkdirs()
+        }
+        val currentDate = LocalDate.now().toString()
+
+        val file = File(folder, currentDate)
+        try {
+            val stream: OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.flush()
+            stream.close()
+            Toast.makeText(requireContext(),"Saved at ${file.absolutePath}",Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    companion object {
+        private const val CAMERA = 1
+
+        private const val GALLERY = 2
+        private const val IMAGE_DIRECTORY="75HardImages"
+
+    }
+
+
 }
