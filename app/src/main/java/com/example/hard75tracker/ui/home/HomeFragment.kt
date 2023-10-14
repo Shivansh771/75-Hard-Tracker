@@ -582,7 +582,7 @@ class HomeFragment : Fragment() {
         }
         val currentDate = LocalDate.now().toString()
 
-        val file = File(folder, currentDate)
+        val file = File(folder, "${currentDate}.png")
         try {
             val stream: OutputStream = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
