@@ -44,6 +44,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 import kotlin.properties.Delegates
@@ -580,9 +581,12 @@ class HomeFragment : Fragment() {
         if (!folder.exists()) {
             folder.mkdirs()
         }
-        val currentDate = LocalDate.now().toString()
+        val currentDate = Date()
+        val format=SimpleDateFormat("dd-MM-yyyy",Locale.getDefault())
+        val name=format.format(currentDate)
 
-        val file = File(folder, "${currentDate}.png")
+
+        val file = File(folder, "${name}.png")
         try {
             val stream: OutputStream = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
