@@ -1,5 +1,6 @@
 package com.example.hard75tracker.adapter
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.hard75tracker.FullImage
 import com.example.hard75tracker.R
 
 class ProgressAdapter(private val ImageList:List<String>):RecyclerView.Adapter<ProgressAdapter.ViewHolder>(){
@@ -30,6 +32,11 @@ class ProgressAdapter(private val ImageList:List<String>):RecyclerView.Adapter<P
 
         val bitmap=BitmapFactory.decodeFile(imagePath)
         holder.imageView.setImageBitmap(bitmap)
+        holder.imageView.setOnClickListener{
+            val intent=Intent(it.context,FullImage::class.java)
+            intent.putExtra("imagePath",imagePath)
+            it.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount()=ImageList.size
