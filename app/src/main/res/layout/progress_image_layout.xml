@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="25dp"
+    app:cardElevation="1dp"
+    android:background="@drawable/shape_button_rounded"
+    app:cardBackgroundColor="#a799b7"
+
+    app:cardUseCompatPadding="true"
+
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dayNumber"
+            android:layout_margin="5dp"
+            android:gravity="center_vertical"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            tools:text="Day"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_margin="1dp"
+                android:id="@+id/imageProgress"
+                android:scaleType="fitXY"
+                tools:src="@drawable/streak1"/>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
