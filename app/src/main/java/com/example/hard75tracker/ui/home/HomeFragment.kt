@@ -288,8 +288,8 @@ class HomeFragment : Fragment() {
 
 
         progress.setOnClickListener{
-            customImageSelectionDialog()
             if(picc==false){
+                customImageSelectionDialog()
                 anim(progress,picc)
                 btncount++
                 picc=true
@@ -582,13 +582,12 @@ class HomeFragment : Fragment() {
         }
         val currentDate = LocalDate.now().toString()
 
-        val file = File(folder, currentDate)
+        val file = File(folder, "${currentDate}.png")
         try {
             val stream: OutputStream = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             stream.flush()
             stream.close()
-            Toast.makeText(requireContext(),"Saved at ${file.absolutePath}",Toast.LENGTH_SHORT).show()
         } catch (e: IOException) {
             e.printStackTrace()
         }

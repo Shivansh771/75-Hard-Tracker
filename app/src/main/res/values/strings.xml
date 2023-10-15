@@ -10,4 +10,5 @@
     <string name="take_a_progress_picture">Take a progress picture</string>
     <string name="read_10_pages_of_a_book">Read 10 pages of a book</string>
     <string name="confirm">Confirm!</string>
+    <string name="label_no_photos_yet">No Photos added yet</string>
 </resources>
