@@ -53,8 +53,10 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private lateinit var sharedPref:SharedPreferences
     var btncount=0
+    lateinit var streakDate:String
     private lateinit var datelist:MutableSet<String>
-
+    lateinit var streak:String
+    var countStreak=0
     private val binding get() = _binding!!
     private val buttonStates=BooleanArray(6)
 
@@ -80,6 +82,11 @@ class HomeFragment : Fragment() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
         val currentDate = LocalDate.now().toString()
         val storedDate = sharedPref.getString("date", "")
+        streak= sharedPref.getString("streak","").toString()
+        if(streak!=""){
+        countStreak=streak.toInt()}
+        streakDate= sharedPref.getString("streakDate","").toString()
+        Toast.makeText(requireContext(),"$storedDate +$streak",Toast.LENGTH_SHORT).show()
         if(currentDate!=storedDate){
             for(i in buttonStates.indices){
                 buttonStates[i]=false
@@ -349,6 +356,20 @@ class HomeFragment : Fragment() {
             bookc=buttonStates[5]
         update()}
         var confirm=binding.confirmButton
+        confirm.setOnClickListener{
+            val editor=sharedPref.edit()
+            val date=LocalDate.now().toString()
+            if(date!=streakDate){
+                streakDate=date
+                editor.putString("streakDate",streakDate)
+                countStreak++
+                streak=countStreak.toString()
+                editor.putString("streak",streak)
+                editor.apply()
+            }
+            Toast.makeText(requireContext(),"$streak",Toast.LENGTH_SHORT).show()
+
+        }
 
 
 
