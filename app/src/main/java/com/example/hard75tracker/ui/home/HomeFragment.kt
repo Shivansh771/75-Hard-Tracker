@@ -86,7 +86,6 @@ class HomeFragment : Fragment() {
         if(streak!=""){
         countStreak=streak.toInt()}
         streakDate= sharedPref.getString("streakDate","").toString()
-        Toast.makeText(requireContext(),"$storedDate +$streak",Toast.LENGTH_SHORT).show()
         if(currentDate!=storedDate){
             for(i in buttonStates.indices){
                 buttonStates[i]=false
@@ -367,7 +366,6 @@ class HomeFragment : Fragment() {
                 editor.putString("streak",streak)
                 editor.apply()
             }
-            Toast.makeText(requireContext(),"$streak",Toast.LENGTH_SHORT).show()
 
         }
 

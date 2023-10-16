@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.hard75tracker.R
@@ -44,7 +43,6 @@ class StreakFragment : Fragment() {
             imageList.add(st)
 
         }
-        Toast.makeText(requireContext(),"$imageList",Toast.LENGTH_SHORT).show()
 
         streakViewModel.text.observe(viewLifecycleOwner) {
         }
