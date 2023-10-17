@@ -36,13 +36,14 @@ class StreakFragment : Fragment() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
 
         streak=sharedPref.getString("streak","").toString()
+        if(streak!=""){
         var streak1=streak.toInt()
 
         for(i in 1..streak1){
             var st= "s${i-1}"
             imageList.add(st)
 
-        }
+        }}
 
         streakViewModel.text.observe(viewLifecycleOwner) {
         }
